@@ -54,5 +54,21 @@ server.delete("/api/users/:id", (req,res) => {
     })
 })
 
+server.put("/api/users/:id", (req,res) => {
+    DBFunctions.update(req.params.id, req.body).then(user => {
+        if(!user){
+            res.status(404).send({ message: "The user with the specified ID does not exist" })
+        }else if(!user.name || !user.bio){
+            res.status(400).send({ message: "Please provide name and bio for the user" })
+        }else{
+            res.status(200).send(user)
+        }
+        
+    })
+    .catch(err => {
+        res.status(500).send({ message: "The user information could not be modified" })
+    })
+})
+
 
 module.exports = server; // EXPORT YOUR SERVER instead of {}
